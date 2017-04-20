@@ -4,8 +4,26 @@
 #include "vec3.h"
 #include "ray.h"
 
+bool hitSphere(const Vec3<double> center, double radius, const ray & r) {
+	Vec3<double> oc = r.getOrigin() - center;	// направление от источника луча к центру сферы
+	// квадратное уравнение, задающее точки пересечения луча со сферой
+	double a = Vec3<double>::dotProduct(r.getDirection(), r.getDirection());
+	double b = 2.0 * Vec3<double>::dotProduct(oc, r.getDirection());
+	double c = Vec3<double>::dotProduct(oc, oc) - radius * radius;
+	double discriminant = b * b - 4 * a * c;
+	// D = 0 -> луч коснулся сферы один раз
+	// D > 0 -> луч пересек сферу в двух точках
+	// D < 0 -> луч не попал в сферу
+	return (discriminant > 0);
+}
 
 Vec3<double> skyboxColor(const ray & r) {
+
+	// луч попал в сферу
+	if (hitSphere(Vec3<double>(0, 0, -1), 0.5, r))
+		return Vec3<double>(1, 0, 0);	// пока простая заглушка. Графон завезу потом
+
+	// луч не попал в сферу - рисуется скайбокс
 	Vec3<double> unitDirection = Vec3<double>::unitVector(r.getDirection());
 	double t = 0.5 * (unitDirection.getY() + 1.0);
 	return Vec3<double>(1.0, 1.0, 1.0) * (1.0 - t) + Vec3<double>(0.5, 0.7, 1.0) * t;	// градиент от синего к белому
@@ -15,8 +33,6 @@ Vec3<double> skyboxColor(const ray & r) {
 int main() {
 	freopen("test.ppm", "w", stdout);
 
-	size_t image_with = 200;
-	size_t image_height = 100;
 
 	std::cout << "P3" << std::endl;
 	std::cout << image_with << " " << image_height << "\n255" << std::endl;
