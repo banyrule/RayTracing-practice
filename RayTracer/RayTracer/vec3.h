@@ -1,33 +1,31 @@
+п»ї// (гЃҐВ°П‰В°)гЃҐпѕђeв…г‚њгѓ»гЂ‚гЂ‚гѓ»г‚њг‚њгѓ»гЂ‚гЂ‚гѓ»г‚њв†г‚њгѓ»гЂ‚гЂ‚гѓ»г‚њг‚њгѓ»гЂ‚гЂ‚гѓ»г‚њ 
 #ifndef VEC3_H_
 #define VEC3_H_
 
 #include <iostream>
 
-template <class T> class Vec3
-{
+template <class T> class Vec3 {
 private:
 	T x, y, z;
 
 public:
 	//
-	// Конструкторы 
+	// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ 
 	//
 
 	Vec3() { x = y = z = 0; };
 
-	Vec3(T xValue, T yValue, T zValue)
-	{
+	Vec3(T xValue, T yValue, T zValue) {
 		x = xValue;
 		y = yValue;
 		z = zValue;
 	}
 
 	//
-	// Геттеры 
+	// Р“РµС‚С‚РµСЂС‹ 
 	//
 
-	void set(const T & xValue, const T & yValue, const T & zValue)
-	{
+	void set(const T & xValue, const T & yValue, const T & zValue) {
 		x = xValue;
 		y = yValue;
 		z = zValue;
@@ -48,7 +46,7 @@ public:
 	void setB(const T &zValue) { z = zValue; }
 
 	//
-	//  Вспомогательные методы
+	//  Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 	//
 
 	T magnitude() const {
@@ -59,13 +57,11 @@ public:
 		(x * x) + (y * y) + (z * z);
 	}
 
-	void zero()
-	{
+	void zero() {
 		x = y = z = 0;
 	}
 
-	void normalise()
-	{
+	void normalise() {
 
 		T magnitude = this->magnitude();
 
@@ -77,21 +73,22 @@ public:
 		}
 	}
 
-	// Пример использования: double foo = Vec3<double>::dotProduct(vectorA, vectorB);
-	static T dotProduct(const Vec3 & vec1, const Vec3 & vec2)
-	{
+	static Vec3 unitVector(const Vec3 & vector) {
+		return (vector.magnitude()) ? (vector / vector.magnitude()) : (vector);
+	}
+
+	// РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ: double foo = Vec3<double>::dotProduct(vectorA, vectorB);
+	static T dotProduct(const Vec3 & vec1, const Vec3 & vec2) {
 		return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 	}
 
-	// Пример использования: double foo = vectorA.dotProduct(vectorB);
-	T dotProduct(const Vec3 & vec) const
-	{
+	// РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ: double foo = vectorA.dotProduct(vectorB);
+	T dotProduct(const Vec3 & vec) const {
 		return x * vec.x + y * vec.y + z * vec.z;
 	}
 
-	// Пример использования: Vec3<double> crossVect = Vec3<double>::crossProduct(vectorA, vectorB);
-	static Vec3 crossProduct(const Vec3 & vec1, const Vec3 & vec2)
-	{
+	// РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ: Vec3<double> crossVect = Vec3<double>::crossProduct(vectorA, vectorB);
+	static Vec3 crossProduct(const Vec3 & vec1, const Vec3 & vec2) {
 		return Vec3(vec1.y * vec2.z - vec1.z * vec2.y, vec1.z * vec2.x - vec1.x * vec2.z, vec1.x * vec2.y - vec1.y * vec2.x);
 	}
 
@@ -99,9 +96,9 @@ public:
 	void addY(T value) { y += value; }
 	void addZ(T value) { z += value; }
 
-	// Расстояние между двумя векторами в пространстве
+	// Р Р°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РґРІСѓРјСЏ РІРµРєС‚РѕСЂР°РјРё РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ
 	//
-	// Это не самая быстрая реализация (но точная). Для повышения скорости можно использовать
+	// Р­С‚Рѕ РЅРµ СЃР°РјР°СЏ Р±С‹СЃС‚СЂР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ (РЅРѕ С‚РѕС‡РЅР°СЏ). Р”Р»СЏ РїРѕРІС‹С€РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ
 	// Manhattan Distance: http://en.wikipedia.org/wiki/Taxicab_geometry
 	// double getManhattanDistance(Vec3 vec1, Vec3 vec2)
 	// {
@@ -111,8 +108,7 @@ public:
 	//      return dx + dy + dz;
 	// }
 	//
-	static T getDistance(const Vec3 & vec1, const Vec3 & vec2)
-	{
+	static T getDistance(const Vec3 & vec1, const Vec3 & vec2) {
 		T dx = vec2.x - vec1.x;
 		T dy = vec2.y - vec1.y;
 		T dz = vec2.z - vec1.z;
@@ -120,16 +116,15 @@ public:
 		return sqrt(dx * dx + dy * dy + dz * dz);
 	}
 
-	void display()
-	{
+	void display() {
 		std::cout << "(" << x << ",\t" << y << ",\t" << z << ")" << std::endl;
 	}
 
 	//
-	//  Перегруженные операторы
+	//  РџРµСЂРµРіСЂСѓР¶РµРЅРЅС‹Рµ РѕРїРµСЂР°С‚РѕСЂС‹
 	//
 
-	// WARNING: Операторы * и / предназначены для работы с векторами, задающими цвет.
+	// WARNING: РћРїРµСЂР°С‚РѕСЂС‹ * Рё / РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅС‹ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РІРµРєС‚РѕСЂР°РјРё, Р·Р°РґР°СЋС‰РёРјРё С†РІРµС‚.
 
 	const Vec3& operator+() const {
 		return *this;
@@ -139,13 +134,11 @@ public:
 		return Vec3<T>(-x, -y, -z);
 	}
 
-	Vec3 operator+(const Vec3 & vector) const
-	{
+	Vec3 operator+(const Vec3 & vector) const {
 		return Vec3<T>(x + vector.x, y + vector.y, z + vector.z);
 	}
 
-	Vec3 & operator+=(const Vec3 & vector)
-	{
+	Vec3 & operator+=(const Vec3 & vector) {
 		x += vector.x;
 		y += vector.y;
 		z += vector.z;
@@ -153,13 +146,11 @@ public:
 		return *this;
 	}
 
-	Vec3 operator-(const Vec3 & vector) const
-	{
+	Vec3 operator-(const Vec3 & vector) const {
 		return Vec3<T>(x - vector.x, y - vector.y, z - vector.z);
 	}
 
-	Vec3 & operator-=(const Vec3 & vector)
-	{
+	Vec3 & operator-=(const Vec3 & vector) {
 		x -= vector.x;
 		y -= vector.y;
 		z -= vector.z;
@@ -167,13 +158,11 @@ public:
 		return *this;
 	}
 
-	Vec3 operator*(const Vec3 & vector) const
-	{
+	Vec3 operator*(const Vec3 & vector) const {
 		return Vec3<T>(x * vector.x, y * vector.y, z * vector.z);
 	}
 
-	Vec3 & operator*=(const Vec3 & vector)
-	{
+	Vec3 & operator*=(const Vec3 & vector) {
 		x *= vector.x;
 		y *= vector.y;
 		z *= vector.z;
@@ -181,13 +170,11 @@ public:
 		return *this;
 	}
 
-	Vec3 operator/(const Vec3 & vector) const
-	{
+	Vec3 operator/(const Vec3 & vector) const {
 		return Vec3<T>(x / vector.x, y / vector.y, z / vector.z);
 	}
 
-	Vec3 & operator/=(const Vec3 & vector)
-	{
+	Vec3 & operator/=(const Vec3 & vector) {
 		x /= vector.x;
 		y /= vector.y;
 		z /= vector.z;
@@ -195,13 +182,11 @@ public:
 		return *this;
 	}
 
-	Vec3 operator*(const T & value) const
-	{
+	Vec3 operator*(const T & value) const {
 		return Vec3<T>(x * value, y * value, z * value);
 	}
 
-	Vec3 & operator*=(const T & value)
-	{
+	Vec3 & operator*=(const T & value) {
 		x *= value;
 		y *= value;
 		z *= value;
@@ -209,13 +194,11 @@ public:
 		return *this;
 	}
 
-	Vec3 operator/(const T & value) const
-	{
+	Vec3 operator/(const T & value) const {
 		return Vec3<T>(x / value, y / value, z / value);
 	}
 
-	Vec3 & operator/=(const T & value)
-	{
+	Vec3 & operator/=(const T & value) {
 		x /= value;
 		y /= value;
 		z /= value;
