@@ -4,11 +4,11 @@
 
 #include "vec3.h"
 
-class  ray {
+class  Ray {
 
 public:
-	ray() {}
-	ray(const Vec3<double> & rayOrigin, const Vec3<double> & rayDirection) { 
+	Ray() {}
+	Ray(const Vec3<double> & rayOrigin, const Vec3<double> & rayDirection) { 
 		origin = rayOrigin; 
 		direction = rayDirection; 
 	}
