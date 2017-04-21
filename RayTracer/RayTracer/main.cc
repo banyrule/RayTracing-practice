@@ -8,6 +8,7 @@
 
 Vec3<double> color(const Ray & r, Hitable *world) {
 	HitRecord rec;
+	if (world->hit(r, 0.0, 9000, rec)) {	// луч пересек какой-то обьект
 		return Vec3<double>(rec.normal.getX() + 1, rec.normal.getY() + 1, rec.normal.getZ() + 1) * 0.5;
 	}
 	else {	// луч ушел в закат - рисуется скайбокс
@@ -38,6 +39,7 @@ int main() {
 	list[1] = new Sphere(Vec3<double>(0, -100.5, -1), 100);
 
 	Hitable *world = new HitableList(list, 2);
+	Camera cam(Vec3<double> (0, 0.4, 0), Vec3<double>(0, 0, -1), Vec3<double>(0, 1, 0), 80, double(imageWidth)/double(imageHeight));
 
 	for (size_t i = imageHeight; i > 0; --i) {
 		fprintf(stderr, "RENDER PROCESS: %f\n",  double(imageHeight - i) / imageHeight * 100);
