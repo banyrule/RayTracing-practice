@@ -117,6 +117,7 @@
     <None Include="test.ppm" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="hitable.h" />
     <ClInclude Include="hitablelist.h" />
     <ClInclude Include="ray.h" />
