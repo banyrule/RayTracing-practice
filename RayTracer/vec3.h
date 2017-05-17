@@ -3,6 +3,7 @@
 #define VEC3_H_
 
 #include <iostream>
+#include <cmath>
 
 template <class T> class Vec3 {
 private:

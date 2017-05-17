@@ -2,8 +2,6 @@
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
 
-#define DRAND ((double)rand() / RAND_MAX)	// случайное double число [0;+1]
-
 #include "ray.h"
 #include "hitable.h"
 
@@ -51,7 +49,7 @@ private:
 Vec3<double> randomInUnitSphere() {
 	Vec3<double> p;
 	do {
-		p = Vec3<double>(DRAND, DRAND, DRAND) * 2.0 - Vec3<double>(1, 1, 1);
+		p = Vec3<double>(drand48(), drand48(), drand48()) * 2.0 - Vec3<double>(1, 1, 1);
 	} while (Vec3<double>::dotProduct(p, p) >= 1.0);
 	return p;
 }

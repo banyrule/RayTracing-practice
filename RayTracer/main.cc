@@ -1,14 +1,34 @@
 ﻿// (づ°ω°)づﾐe★゜・。。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜ 
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <cstdlib>
 #include "hitablelist.h"
 #include "material.h"
 #include "camera.h"
 #include "sphere.h"
 
-#define DRAND ((double)rand() / RAND_MAX)	// случайное double число [0;+1]
 #define MAX_RAY_DEPTH 64
 
+// вывод прогресбара в консоль (stderr)
+void progressBarTick(double progress) {
+	size_t barWidth = 32;
+	std::cerr << int(progress * 100.0) << "% [";
+	int pos = barWidth * progress;
+	for (size_t i = 0; i < barWidth; ++i) {
+		if (i <= pos) std::cerr << "=";
+		else std::cerr << ".";
+	}
+	std::cerr << "] " << "\r";
+	std::cerr.flush();
+}
+
+void progressBarDone() {
+	size_t barWidth = 32;
+	std::cerr << 100 << "% [";
+	for (size_t i = 0; i < barWidth; ++i)
+		std::cerr << "=";
+	std::cerr << "] \033[032m OK" << std::endl;
+}
 
 Vec3<double> color(const Ray & r, Hitable *world, int depth) {
 	HitRecord rec;
@@ -30,10 +50,8 @@ Vec3<double> color(const Ray & r, Hitable *world, int depth) {
 }
 
 int main() {
-	freopen("test.ppm", "w", stdout);
-
-	size_t imageWidth = 640;
-	size_t imageHeight = 320;
+	size_t imageWidth = 240;
+	size_t imageHeight = 180;
 	size_t samplesPerPixel = 128;	// кол-во проб на каждый пиксель (для сглаживания)
 
 	std::cout << "P3" << std::endl;
@@ -55,12 +73,14 @@ int main() {
 	Camera cam(Vec3<double> (-1.7, 1.2, 1), Vec3<double>(0, 0, -1), Vec3<double>(0, 1, 0), 42, double(imageWidth)/double(imageHeight));
 
 	for (size_t i = imageHeight; i > 0; --i) {
-		fprintf(stderr, "RENDER PROCESS: %f\n",  double(imageHeight - i) / imageHeight * 100);
+	
+		progressBarTick(double(imageHeight - i) / imageHeight);
+	
 		for (size_t j = 0; j < imageWidth; ++j) {
 			Vec3<double> col(0, 0, 0);
 			for (size_t s = 0; s < samplesPerPixel; ++s) {
-				double u = double(j + DRAND) / imageWidth;	// смещение по горизонтали
-				double v = double(i + DRAND) / imageHeight;	// смещение по вертикали
+				double u = double(j + drand48()) / imageWidth;	// смещение по горизонтали
+				double v = double(i + drand48()) / imageHeight;	// смещение по вертикали
 				Ray r = cam.getRay(u, v);
 				Vec3<double> p = r.pointAtParameter(2.0);
 				col += color(r, world, 0);			// каждый пиксель собирается из нескольких проб
@@ -76,6 +96,8 @@ int main() {
 		}
 		std::cout << std::endl;
 	}
+
+	progressBarDone();
 
 	return EXIT_FAILURE;
 }
