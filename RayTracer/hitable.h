@@ -1,4 +1,4 @@
-﻿// (づ°ω°)づﾐe★゜・。。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜ 
+// (づ°ω°)づﾐe★゜・。。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜
 #ifndef HITABLE_H_
 #define HITABLE_H_
 
@@ -6,17 +6,18 @@
 
 class Material;
 
-struct HitRecord {
+struct HitRecord
+{
 	double t;
-	Vec3<double> p;
-	Vec3<double> normal;
+	Vec3 p;
+	Vec3 normal;
 	Material * material;
-	
 };
 
-class Hitable {
+class Hitable
+{
 public:
-	// t_min и t_max будут ограничивать область отрисовки
+	// tMin и tMax будут ограничивать область отрисовки
 	virtual bool hit(const Ray & r, double tMin, double tMax, HitRecord & rec) const = 0;
 };
 

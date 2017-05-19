@@ -1,29 +1,25 @@
-﻿// (づ°ω°)づﾐe★゜・。。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜ 
+// (づ°ω°)づﾐe★゜・。。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜ 
 #ifndef RAY_H_
 #define RAY_H_
 
 #include "vec3.h"
 
-class  Ray {
-
+class Ray
+{
 public:
 	Ray() {}
-	Ray(const Vec3<double> & rayOrigin, const Vec3<double> & rayDirection) { 
-		origin = rayOrigin; 
-		direction = rayDirection; 
-	}
-
-	Vec3<double> getOrigin() const { return origin; }
-	Vec3<double> getDirection() const { return direction; }
+	Ray(const Vec3 & origin, const Vec3 & direction) : origin_(origin), direction_(direction) {}  
+	
+	Vec3 getOrigin() const	{ return origin_; }
+	Vec3 getDirection() const	{ return direction_; }
 
 	// луч это ф-ия p(t) = источкик + направление * время_t
-	Vec3<double> pointAtParameter(double t) const { 
-		return origin + direction * t; 
-	}
-
+	Vec3 pointAtParameter(double t) const { return origin_ + t*direction_; }
 private:
-	Vec3<double> origin;
-	Vec3<double> direction;
+	Vec3 origin_;
+	Vec3 direction_;
 };
 
 #endif	// RAY_H_
+
+

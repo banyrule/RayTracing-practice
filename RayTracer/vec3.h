@@ -1,211 +1,167 @@
-﻿// (づ°ω°)づﾐe★゜・。。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜ 
+// (づ°ω°)づﾐe★゜・。。・゜゜・。。・゜☆゜・。。・゜゜・。。・゜ 
 #ifndef VEC3_H_
 #define VEC3_H_
 
+#include <math.h>
+#include <stdlib.h>
 #include <iostream>
-#include <cmath>
 
-template <class T> class Vec3 {
-private:
-	T x, y, z;
-
+class Vec3 {
 public:
-	//
-	// Конструкторы 
-	//
-
-	Vec3() { x = y = z = 0; };
-
-	Vec3(T xValue, T yValue, T zValue) {
-		x = xValue;
-		y = yValue;
-		z = zValue;
+	Vec3() {}
+	Vec3(double e0, double e1, double e2)
+	{
+		e[0] = e0;
+		e[1] = e1;
+		e[2] = e2;
 	}
 
-	//
-	// Геттеры 
-	//
+	inline double x() const { return e[0]; }
+	inline double y() const { return e[1]; }
+	inline double z() const { return e[2]; }
+	inline double r() const { return e[0]; }
+	inline double g() const { return e[1]; }
+	inline double b() const { return e[2]; }
 
-	void set(const T & xValue, const T & yValue, const T & zValue) {
-		x = xValue;
-		y = yValue;
-		z = zValue;
-	}
+	inline const Vec3 &operator+() const { return *this; }
+	inline Vec3 operator-() const { return Vec3(-e[0], -e[1], -e[2]); }
+	inline double operator[](int i) const { return e[i]; }
+	inline double &operator[](int i) { return e[i]; };
 
-	T getX() const { return x; }
-	T getY() const { return y; }
-	T getZ() const { return z; }
-	T getR() const { return x; }
-	T getG() const { return y; }
-	T getB() const { return z; }
+	inline Vec3 &operator+=(const Vec3 &v2);
+	inline Vec3 &operator-=(const Vec3 &v2);
+	inline Vec3 &operator*=(const Vec3 &v2);
+	inline Vec3 &operator/=(const Vec3 &v2);
+	inline Vec3 &operator*=(const double t);
+	inline Vec3 &operator/=(const double t);
 
-	void setX(const T &xValue) { x = xValue; }
-	void setY(const T &yValue) { y = yValue; }
-	void setZ(const T &zValue) { z = zValue; }
-	void setR(const T &xValue) { x = xValue; }
-	void setG(const T &yValue) { y = yValue; }
-	void setB(const T &zValue) { z = zValue; }
+	inline double length() const { return sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]); }
+	inline double squaredLength() const { return e[0] * e[0] + e[1] * e[1] + e[2] * e[2]; }
+	inline void makeUnitVector();
 
-	//
-	//  Вспомогательные методы
-	//
-
-	T magnitude() const {
-		return sqrt((x * x) + (y * y) + (z * z));
-	}
-
-	T magnitudeSquared() const {
-		(x * x) + (y * y) + (z * z);
-	}
-
-	void zero() {
-		x = y = z = 0;
-	}
-
-	void normalise() {
-
-		T magnitude = this->magnitude();
-
-		if (magnitude != 0)
-		{
-			x /= magnitude;
-			y /= magnitude;
-			z /= magnitude;
-		}
-	}
-
-	static Vec3 unitVector(const Vec3 & vector) {
-		return (vector.magnitude()) ? (vector / vector.magnitude()) : (vector);
-	}
-
-	// Пример использования: double foo = Vec3<double>::dotProduct(vectorA, vectorB);
-	static T dotProduct(const Vec3 & vec1, const Vec3 & vec2) {
-		return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
-	}
-
-	// Пример использования: double foo = vectorA.dotProduct(vectorB);
-	T dotProduct(const Vec3 & vec) const {
-		return x * vec.x + y * vec.y + z * vec.z;
-	}
-
-	// Пример использования: Vec3<double> crossVect = Vec3<double>::crossProduct(vectorA, vectorB);
-	static Vec3 crossProduct(const Vec3 & vec1, const Vec3 & vec2) {
-		return Vec3(vec1.y * vec2.z - vec1.z * vec2.y, vec1.z * vec2.x - vec1.x * vec2.z, vec1.x * vec2.y - vec1.y * vec2.x);
-	}
-
-	void addX(T value) { x += value; }
-	void addY(T value) { y += value; }
-	void addZ(T value) { z += value; }
-
-	// Расстояние между двумя векторами в пространстве
-	//
-	// Это не самая быстрая реализация (но точная). Для повышения скорости можно использовать
-	// Manhattan Distance: http://en.wikipedia.org/wiki/Taxicab_geometry
-	// double getManhattanDistance(Vec3 vec1, Vec3 vec2)
-	// {
-	//      float dx = abs(vec2.x - vec1.x);
-	//      float dy = abs(vec2.y - vec1.y);
-	//      float dz = abs(vec2.z - vec1.z);
-	//      return dx + dy + dz;
-	// }
-	//
-	static T getDistance(const Vec3 & vec1, const Vec3 & vec2) {
-		T dx = vec2.x - vec1.x;
-		T dy = vec2.y - vec1.y;
-		T dz = vec2.z - vec1.z;
-
-		return sqrt(dx * dx + dy * dy + dz * dz);
-	}
-
-	void display() {
-		std::cout << "(" << x << ",\t" << y << ",\t" << z << ")" << std::endl;
-	}
-
-	//
-	//  Перегруженные операторы
-	//
-
-	// WARNING: Операторы * и / предназначены для работы с векторами, задающими цвет.
-
-	const Vec3& operator+() const {
-		return *this;
-	}
-
-	inline Vec3 operator-() const {
-		return Vec3<T>(-x, -y, -z);
-	}
-
-	Vec3 operator+(const Vec3 & vector) const {
-		return Vec3<T>(x + vector.x, y + vector.y, z + vector.z);
-	}
-
-	Vec3 & operator+=(const Vec3 & vector) {
-		x += vector.x;
-		y += vector.y;
-		z += vector.z;
-
-		return *this;
-	}
-
-	Vec3 operator-(const Vec3 & vector) const {
-		return Vec3<T>(x - vector.x, y - vector.y, z - vector.z);
-	}
-
-	Vec3 & operator-=(const Vec3 & vector) {
-		x -= vector.x;
-		y -= vector.y;
-		z -= vector.z;
-
-		return *this;
-	}
-
-	Vec3 operator*(const Vec3 & vector) const {
-		return Vec3<T>(x * vector.x, y * vector.y, z * vector.z);
-	}
-
-	Vec3 & operator*=(const Vec3 & vector) {
-		x *= vector.x;
-		y *= vector.y;
-		z *= vector.z;
-
-		return *this;
-	}
-
-	Vec3 operator/(const Vec3 & vector) const {
-		return Vec3<T>(x / vector.x, y / vector.y, z / vector.z);
-	}
-
-	Vec3 & operator/=(const Vec3 & vector) {
-		x /= vector.x;
-		y /= vector.y;
-		z /= vector.z;
-
-		return *this;
-	}
-
-	Vec3 operator*(const T & value) const {
-		return Vec3<T>(x * value, y * value, z * value);
-	}
-
-	Vec3 & operator*=(const T & value) {
-		x *= value;
-		y *= value;
-		z *= value;
-
-		return *this;
-	}
-
-	Vec3 operator/(const T & value) const {
-		return Vec3<T>(x / value, y / value, z / value);
-	}
-
-	Vec3 & operator/=(const T & value) {
-		x /= value;
-		y /= value;
-		z /= value;
-
-		return *this;
-	}
+	double e[3];
 };
+
+inline std::istream &operator>>(std::istream &is, Vec3 &t)
+{
+	is >> t.e[0] >> t.e[1] >> t.e[2];
+	return is;
+}
+
+inline std::ostream &operator<<(std::ostream &os, const Vec3 &t)
+{
+	os << t.e[0] << " " << t.e[1] << " " << t.e[2];
+	return os;
+}
+
+inline void Vec3::makeUnitVector()
+{
+	double k = 1.0 / sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]);
+	e[0] *= k;
+	e[1] *= k;
+	e[2] *= k;
+}
+
+inline Vec3 operator+(const Vec3 &v1, const Vec3 &v2)
+{
+	return Vec3(v1.e[0] + v2.e[0], v1.e[1] + v2.e[1], v1.e[2] + v2.e[2]);
+}
+
+inline Vec3 operator-(const Vec3 &v1, const Vec3 &v2)
+{
+	return Vec3(v1.e[0] - v2.e[0], v1.e[1] - v2.e[1], v1.e[2] - v2.e[2]);
+}
+
+inline Vec3 operator*(const Vec3 &v1, const Vec3 &v2)
+{
+	return Vec3(v1.e[0] * v2.e[0], v1.e[1] * v2.e[1], v1.e[2] * v2.e[2]);
+}
+
+inline Vec3 operator/(const Vec3 &v1, const Vec3 &v2)
+{
+	return Vec3(v1.e[0] / v2.e[0], v1.e[1] / v2.e[1], v1.e[2] / v2.e[2]);
+}
+
+inline Vec3 operator*(double t, const Vec3 &v)
+{
+	return Vec3(t * v.e[0], t * v.e[1], t * v.e[2]);
+}
+
+inline Vec3 operator/(Vec3 v, double t)
+{
+	return Vec3(v.e[0] / t, v.e[1] / t, v.e[2] / t);
+}
+
+inline Vec3 operator*(const Vec3 &v, double t)
+{
+	return Vec3(t * v.e[0], t * v.e[1], t * v.e[2]);
+}
+
+inline double dot(const Vec3 &v1, const Vec3 &v2)
+{
+	return v1.e[0] * v2.e[0] + v1.e[1] * v2.e[1] + v1.e[2] * v2.e[2];
+}
+
+inline Vec3 cross(const Vec3 &v1, const Vec3 &v2)
+{
+	return Vec3((v1.e[1] * v2.e[2] - v1.e[2] * v2.e[1]),
+		    (-(v1.e[0] * v2.e[2] - v1.e[2] * v2.e[0])),
+		    (v1.e[0] * v2.e[1] - v1.e[1] * v2.e[0]));
+}
+
+inline Vec3 &Vec3::operator+=(const Vec3 &v)
+{
+	e[0] += v.e[0];
+	e[1] += v.e[1];
+	e[2] += v.e[2];
+	return *this;
+}
+
+inline Vec3 &Vec3::operator*=(const Vec3 &v)
+{
+	e[0] *= v.e[0];
+	e[1] *= v.e[1];
+	e[2] *= v.e[2];
+	return *this;
+}
+
+inline Vec3 &Vec3::operator/=(const Vec3 &v)
+{
+	e[0] /= v.e[0];
+	e[1] /= v.e[1];
+	e[2] /= v.e[2];
+	return *this;
+}
+
+inline Vec3 &Vec3::operator-=(const Vec3 &v)
+{
+	e[0] -= v.e[0];
+	e[1] -= v.e[1];
+	e[2] -= v.e[2];
+	return *this;
+}
+
+inline Vec3 &Vec3::operator*=(const double t)
+{
+	e[0] *= t;
+	e[1] *= t;
+	e[2] *= t;
+	return *this;
+}
+
+inline Vec3 &Vec3::operator/=(const double t)
+{
+	double k = 1.0 / t;
+
+	e[0] *= k;
+	e[1] *= k;
+	e[2] *= k;
+	return *this;
+}
+
+inline Vec3 unitVector(Vec3 v)
+{
+	return v / v.length();
+}
 
 #endif	// VEC3_H_
